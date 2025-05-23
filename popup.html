@@ -1,19 +1,38 @@
-<!-- popup.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
-    <title>Instagram Scraper</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 10px; width: 300px; }
-        button { margin-bottom: 10px; width: 100%; }
-        #output { white-space: pre-wrap; max-height: 200px; overflow-y: auto; font-size: 14px; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dont Follow Me?</title>
+    <link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 </head>
 <body>
-    <h2>Scraper IG</h2>
-    <button id="scrapeBtn">Extraer</button>
-    <div id="output">Haz clic para obtener seguidores o seguidos</div>
+    <h2><i class="fab fa-instagram"></i> No me sigue en Instagram?</h2>
+    <div class="pasos">
+        <p>1. Primero entra a tu lista de <span>Seguidores</span> y baja hasta el último de ellos.</p>
+        <p>2. Cuando ya estés en el último seguidor, extrae los seguidores haciendo click en <span>Extraer lista actual</span>.</p>
+        <p>3. Luego, haciendo lo mismo en tu lista de <span>Seguidos</span> baja hasta el último de ellos.</p>
+        <p>4. Extrae la lista de seguidos haciendo click en <span>Extraer lista actual</span>.</p>
+        <p>5. Por último, haz click en <span>Mostrar personas que no te siguen</span> para ver la lista.</p>
+    </div>
+
+    <button id="extractBtn"><i class="fas fa-download"></i> Extraer lista actual</button>
+
+    <div class="checkbox">
+        <div>
+            <input type="checkbox" id="followers" disabled />
+            <label for="followers"><i class="fas fa-user-friends"></i> Lista de seguidores</label>
+        </div>
+        <div>
+            <input type="checkbox" id="followings" disabled />
+            <label for="followings"><i class="fas fa-user-plus"></i> Lista de seguidos</label>
+        </div>
+    </div>
+    <p id="status"><i class="fas fa-info-circle"></i> Haz clic en el botón estando en la lista de seguidores o seguidos.</p>
+    <button id="compareBtn" disabled><i class="fas fa-search"></i> Mostrar personas que no te siguen</button>
+    <button id="clearBtn"><i class="fas fa-trash-alt"></i> Borrar listas guardadas</button>
+    <div id="result"></div>
 
     <script src="popup.js"></script>
 </body>

@@ -1,18 +1,44 @@
-// Escucha los mensajes que vienen del popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "scrapeInstagram") {
-        // Buscar la pestaña activa del navegador
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             const activeTab = tabs[0];
+            
+            // Check if we're on Instagram
+            if (!activeTab.url.includes("instagram.com")) {
+                sendResponse({
+                    error: true,
+                    message: "Esta extensión solo funciona en Instagram"
+                });
+                return;
+            }
 
-            // Enviar mensaje a content.js
-            chrome.tabs.sendMessage(activeTab.id, { action: "getList" }, (response) => {
-                // Responder al popup
-                sendResponse(response);
-            });
+            // Forward the message to content script
+            chrome.tabs.sendMessage(
+                activeTab.id, 
+                { action: "getList" }, 
+                (contentResponse) => {
+                    if (chrome.runtime.lastError) {
+                        sendResponse({
+                            error: true,
+                            message: "No se pudo comunicar con Instagram"
+                        });
+                    } else {
+                        // Save the list automatically using content script's storage functions
+                        if (contentResponse && contentResponse.tipoLista !== "ninguno") {
+                            chrome.tabs.sendMessage(
+                                activeTab.id,
+                                {
+                                    action: "saveList",
+                                    listName: contentResponse.tipoLista,
+                                    listData: contentResponse
+                                }
+                            );
+                        }
+                        sendResponse(contentResponse);
+                    }
+                }
+            );
         });
-
-        // true permite que sendResponse sea asíncrono
-        return true;
+        return true; // Keep the message channel open for async response
     }
 });
